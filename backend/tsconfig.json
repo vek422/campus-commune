@@ -8,7 +8,11 @@
     "strict": true,
     "allowJs": false,
     "paths": {
-      "@adapters/*": ["src/adapters/*"]
+      "@adapters/*": ["src/adapters/*"],
+      "@config/*": ["src/config/*"],
+      "@data/*": ["src/data/*"],
+      "@core/*": ["src/core/*"],
+      "@infrastructure/*": ["src/infrastructure/*"]
     },
     "moduleResolution": "node",
     "esModuleInterop": true,

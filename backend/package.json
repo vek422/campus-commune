@@ -18,10 +18,15 @@
     "typescript": "^5.5.4"
   },
   "_moduleAliases": {
-    "@adapters": "dist/adapters/"
+    "@adapters": "dist/adapters/",
+    "@config":"dist/config/",
+    "@infrastructure": "dist/infrastructure/",
+    "@data":"dist/data/",
+    "@core":"dist/core/"
   },
   "dependencies": {
     "@types/cors": "^2.8.17",
+    "@types/mongoose": "^5.11.96",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
