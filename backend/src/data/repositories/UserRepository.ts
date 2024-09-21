@@ -1,5 +1,6 @@
 import { User } from "@core/domain/entities/User";
 import { UserModel } from "@data/models/User";
+import { HttpError } from "src/utils/ErrorHandler/HttpError";
 export class UserRepository {
   async createUser(user: User): Promise<User> {
     try {
@@ -24,7 +25,7 @@ export class UserRepository {
   async getUserByEmail(email: string): Promise<User> {
     try {
       const user = await UserModel.findOne({ email });
-      if (!user) throw new Error("User Not Found");
+      if (!user) throw new HttpError(404, "User Not Found");
       return new User(user);
     } catch (err: any) {
       throw new Error("Error at UserRepository.getUserByEmail: " + err.message);
