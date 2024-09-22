@@ -27,15 +27,15 @@ jobs:
         cache: 'npm'
 
     - name: Backend Dependencies
-      working-directory: backend  
+      working-directory: backend/package-lock.json  
       run: npm ci
 
     # Install Frontend Dependencies
     - name: Frontend Dependencies
-      working-directory: frontend 
+      working-directory: frontend/package-lock.json 
       run: npm ci
 
     # Build Frontend (if applicable)
     - name: Build Frontend
-      working-directory: frontend  
+      working-directory: frontend/package-lock.json  
       run: npm run build --if-present
