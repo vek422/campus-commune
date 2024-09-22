@@ -14,7 +14,9 @@ import { FC } from "react";
 import { Input } from "@/components/ui/input";
 import PasswordInput from "@/components/ui/passwordInput";
 import { LoadingButton } from "@/components/ui/loadingButton";
-
+import { useLogin } from "@/hooks/api/useLogin";
+import { useAppSelector } from "@/store/store";
+import { Navigate } from "react-router-dom";
 const initialValues = {
   email: "",
   password: "",
@@ -25,15 +27,17 @@ const loginSchema = z.object({
 });
 
 export const LoginForm: FC = () => {
+  const { user } = useAppSelector((state) => state.auth);
   const form = useForm<typeof initialValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: initialValues,
   });
-
+  const { login, isLoading, error, data } = useLogin();
   const onSubmit = (values: typeof initialValues) => {
-    console.log(values);
+    login(values);
   };
 
+  if (user) return <Navigate to="/" />;
   return (
     <Form {...form}>
       <form
@@ -68,7 +72,7 @@ export const LoginForm: FC = () => {
             </FormItem>
           )}
         />
-        <LoadingButton isLoading={false} type="submit" className="w-full">
+        <LoadingButton isLoading={isLoading} type="submit" className="w-full">
           Login
         </LoadingButton>
       </form>

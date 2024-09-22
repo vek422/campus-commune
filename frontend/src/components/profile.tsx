@@ -14,7 +14,7 @@ import { LogOut } from "lucide-react";
 export default function Profile() {
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-
+  if (!user) return null;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
