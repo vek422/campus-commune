@@ -1,37 +1,43 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
 name: Node.js CI
 
 on:
   push:
     branches: [ "main" ]
-  
+ 
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
-   
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
     steps:
     - uses: actions/checkout@v4
+
+    # Add a step to check the directory structure
+    - name: List Directory Structure for Debugging
+      run: ls -R  # This will show you the entire directory structure, useful for debugging
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - name: Backend Dependencies
-      working-directory: backend/package-lock.json  
+    # Install Backend Dependencies
+    - name: Install Backend Dependencies
+      working-directory: ./campus-commune/backend  # Adjust if `campus-commune` is the root folder
       run: npm ci
 
     # Install Frontend Dependencies
-    - name: Frontend Dependencies
-      working-directory: frontend/package-lock.json 
+    - name: Install Frontend Dependencies
+      working-directory: ./campus-commune/frontend  # Adjust if `campus-commune` is the root folder
       run: npm ci
 
     # Build Frontend (if applicable)
     - name: Build Frontend
-      working-directory: frontend/package-lock.json  
+      working-directory: ./campus-commune/frontend
       run: npm run build --if-present
+
