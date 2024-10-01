@@ -11,7 +11,9 @@ export const Logo: FC = () => {
         alt="campus commune"
         className="w-8 h-8"
       />
-      <h1 className="font-bold text-2xl">campus commune</h1>
+      <h1 className="font-bold text-xl sm:text-lg md:text-2xl">
+        campus commune
+      </h1>
     </div>
   );
 };

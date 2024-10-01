@@ -32,7 +32,7 @@ export const LoginForm: FC = () => {
     resolver: zodResolver(loginSchema),
     defaultValues: initialValues,
   });
-  const { login, isLoading, error, data } = useLogin();
+  const { login, isLoading } = useLogin();
   const onSubmit = (values: typeof initialValues) => {
     login(values);
   };
