@@ -1,9 +1,9 @@
 import { User } from "@core/domain/entities/User";
 import { UserUseCase } from "@core/usecases/UserUsecase";
 import { Request, Response } from "express";
-import { HttpError } from "src/utils/ErrorHandler/HttpError";
-import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "@config/index";
+import { HttpError } from "@utils/ErrorHandler/HttpError";
+
+import { generateToken } from "@utils/generateToken";
 export class AuthController {
   private userUsecase: UserUseCase;
   constructor() {
@@ -15,10 +15,7 @@ export class AuthController {
       const { email, password } = req.body;
       const user = await this.userUsecase.login({ email, password });
       //generate JWT token
-      const token = jwt.sign(
-        { email: user.email, id: user.id },
-        JWT_SECRET as string
-      );
+      const token = generateToken(user.email, user.id);
       res.status(200).json({ user, token }).end();
     } catch (err: any) {
       if (err instanceof HttpError) {
