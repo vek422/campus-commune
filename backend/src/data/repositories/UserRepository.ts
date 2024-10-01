@@ -1,6 +1,6 @@
 import { User } from "@core/domain/entities/User";
 import { UserModel } from "@data/models/User";
-import { HttpError } from "src/utils/ErrorHandler/HttpError";
+import { HttpError } from "@utils/ErrorHandler/HttpError";
 export class UserRepository {
   async createUser(user: User): Promise<User> {
     try {

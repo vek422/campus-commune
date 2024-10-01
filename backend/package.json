@@ -22,7 +22,8 @@
     "@config": "dist/config/",
     "@infrastructure": "dist/infrastructure/",
     "@data": "dist/data/",
-    "@core": "dist/core/"
+    "@core": "dist/core/",
+    "@utils": "dist/utils"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.2",

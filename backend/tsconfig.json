@@ -12,6 +12,7 @@
       "@config/*": ["src/config/*"],
       "@data/*": ["src/data/*"],
       "@core/*": ["src/core/*"],
+      "@utils/*":["src/utils/*"],
       "@infrastructure/*": ["src/infrastructure/*"]
     },
     "moduleResolution": "node",
