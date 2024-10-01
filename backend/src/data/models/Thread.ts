@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
 interface IThread extends mongoose.Document {
-  title: string;
+
+
   content: string;
   image_uri: string;
   liked_by: mongoose.Schema.Types.ObjectId[];
@@ -10,17 +11,13 @@ interface IThread extends mongoose.Document {
 }
 
 const threadSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
   content: {
     type: String,
-    required: true,
+    // required: true,
   },
   image_uri: {
     type: String,
-    required: true,
+    // required: true,
   },
   liked_by: {
     type: [mongoose.Schema.Types.ObjectId],
@@ -32,8 +29,9 @@ const threadSchema = new mongoose.Schema({
   },
   video_uri: {
     type: String,
-    required: true,
+    // required: true,
   },
+  
 });
 
 const ThreadModel = mongoose.model<IThread>("Thread", threadSchema);

@@ -1,3 +1,4 @@
+import { profile } from "console";
 import mongoose, { Document } from "mongoose";
 
 interface IUser extends Document {
@@ -5,6 +6,8 @@ interface IUser extends Document {
   lastName: string;
   email: string;
   password: string;
+  profile_url: string;
+  comments: mongoose.Schema.Types.ObjectId[];
   threads: mongoose.Schema.Types.ObjectId[];
   friends: mongoose.Schema.Types.ObjectId[];
   communes: mongoose.Schema.Types.ObjectId[];
@@ -23,6 +26,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  profile_url: {
+    type: String
+  },
   password: {
     type: String,
     required: true,
@@ -39,6 +45,10 @@ const userSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Commune",
   },
+  comments: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Comment",
+  }
 });
 
 const UserModel = mongoose.model<IUser>("User", userSchema);
