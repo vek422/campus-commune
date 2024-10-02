@@ -1,9 +1,10 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
-    branches: [ "main" ]
- 
+    branches:
+      - main
+  
 
 jobs:
   build:
@@ -11,33 +12,26 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        directory:
+          - service1
+          - service2
+          - service3
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    # Add a step to check the directory structure
-    - name: List Directory Structure for Debugging
-      run: ls -R  # This will show you the entire directory structure, useful for debugging
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - name: Install dependencies
+        run: |
+          cd ${{ matrix.directory }}
+          npm install
 
-    # Install Backend Dependencies
-    - name: Install Backend Dependencies
-      working-directory: ./campus-commune/backend  # Adjust if `campus-commune` is the root folder
-      run: npm ci
-
-    # Install Frontend Dependencies
-    - name: Install Frontend Dependencies
-      working-directory: ./campus-commune/frontend  # Adjust if `campus-commune` is the root folder
-      run: npm ci
-
-    # Build Frontend (if applicable)
-    - name: Build Frontend
-      working-directory: ./campus-commune/frontend
-      run: npm run build --if-present
-
+      - name: Run tests
+        run: |
+          cd ${{ matrix.directory }}
+          npm test
