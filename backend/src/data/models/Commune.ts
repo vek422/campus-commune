@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 interface ICommune extends mongoose.Document {
     name: string;
     description: string;
-    image_uri: string;
+    profile_uri: string;
     members: mongoose.Schema.Types.ObjectId[];
     threads: mongoose.Schema.Types.ObjectId[];
 }
@@ -18,7 +18,7 @@ const communeSchema = new mongoose.Schema({
         type: String,
         // required: true,
     },
-    image_uri: {
+    profile_uri: {
         type: String,
         // required: true,
     },
