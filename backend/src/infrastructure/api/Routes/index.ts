@@ -1,5 +1,11 @@
 import { Router } from "express";
 import { authRouter } from "./AuthRoutes";
+import { CommuneRouter } from "./CommuneRoutes";
+import { UserRouter } from "./UserRoutes";
+import { ThreadRouter } from "./ThreadRoutes";
 const router = Router();
 router.use("/auth", authRouter);
+router.use("/commune", CommuneRouter);
+router.use("/user", UserRouter);
+router.use("/thread", ThreadRouter);
 export { router };
