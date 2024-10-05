@@ -8,7 +8,9 @@ export class UserUseCase {
     this.userRepository = new UserRepository();
     this.registerUser = this.registerUser.bind(this);
   }
-
+  async getUserById(id: string) {
+    return this.userRepository.getUserById(id);
+  }
   async registerUser(user: User) {
     const isUserExists = await this.userRepository.isUserExists(user.email);
     if (isUserExists) throw new HttpError(409, "User already exists");

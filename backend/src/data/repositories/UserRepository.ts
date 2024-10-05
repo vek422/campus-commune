@@ -31,6 +31,15 @@ export class UserRepository {
       throw new Error("Error at UserRepository.getUserByEmail: " + err.message);
     }
   }
+  async getUserById(id: string): Promise<User> {
+    try {
+      const user = await UserModel.findById(id).populate([{ path: "threads", select: ["title", "content", "createdBy", "createdAt"] }, { path: "friends", select: ["firstName", "lastName", "email"] }, { path: "communes", select: ["name", "description", "profileUri"] }]);
+      if (!user) throw new HttpError(404, "User Not Found");
+      return new User(user);
+    } catch (err: any) {
+      throw new Error("Error at UserRepository.getUserById: " + err.message);
+    }
+  }
   async isUserExists(email: string): Promise<boolean | undefined> {
     try {
       const user = await UserModel.exists({ email });
