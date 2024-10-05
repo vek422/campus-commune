@@ -10,13 +10,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import PasswordInput from "@/components/ui/passwordInput";
 import { LoadingButton } from "@/components/ui/loadingButton";
 import { useLogin } from "@/hooks/api/useLogin";
 import { useAppSelector } from "@/store/store";
 import { Navigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 const initialValues = {
   email: "",
   password: "",
@@ -28,14 +29,23 @@ const loginSchema = z.object({
 
 export const LoginForm: FC = () => {
   const { user } = useAppSelector((state) => state.auth);
+  const { toast } = useToast();
   const form = useForm<typeof initialValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: initialValues,
   });
-  const { login, isLoading } = useLogin();
+  const { login, isLoading, error } = useLogin();
   const onSubmit = (values: typeof initialValues) => {
     login(values);
   };
+  useEffect(() => {
+    if (error)
+      toast({
+        title: "Error While Logging",
+        description: error,
+        variant: "destructive",
+      });
+  }, [error, toast]);
 
   if (user) return <Navigate to="/" />;
   return (

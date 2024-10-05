@@ -9,7 +9,7 @@ export default function NavLink({
   href: string;
 }) {
   return (
-    <Link to={href}>
+    <Link to={href} className="max-w-min">
       <Button
         variant={"link"}
         className="text-secondary-foreground hover:text-foreground hover:no-underline active:font-semibold"
