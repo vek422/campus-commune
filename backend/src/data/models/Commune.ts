@@ -4,9 +4,10 @@ import mongoose from "mongoose";
 interface ICommune extends mongoose.Document {
     name: string;
     description: string;
-    profile_uri: string;
+    profileUri: string;
     members: mongoose.Schema.Types.ObjectId[];
-    threads: mongoose.Schema.Types.ObjectId[];
+    channels: mongoose.Schema.Types.ObjectId[];
+    createdBy: mongoose.Schema.Types.ObjectId;
 }
 
 const communeSchema = new mongoose.Schema({
@@ -18,7 +19,7 @@ const communeSchema = new mongoose.Schema({
         type: String,
         // required: true,
     },
-    profile_uri: {
+    profileUri: {
         type: String,
         // required: true,
     },
@@ -26,10 +27,14 @@ const communeSchema = new mongoose.Schema({
         type: [mongoose.Schema.Types.ObjectId],
         ref: "User",
     },
-    threads: {
+    channels: {
         type: [mongoose.Schema.Types.ObjectId],
-        ref: "Thread",
+        ref: "Channel",
     },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    }
 });
 
 const CommuneModel = mongoose.model<ICommune>("Commune", communeSchema);
