@@ -3,13 +3,13 @@ import { Topbar } from "@/components/topbar";
 
 export default function PageLayout({ children }: { children: JSX.Element }) {
   return (
-    <div className="w-screen h-screen bg-secondary">
+    <div className="w-screen h-screen bg-secondary flex flex-col overflow-hidden">
       <Topbar />
-      <div className="grid grid-cols-7 h-[calc(100%-50px)]">
-        <div className="col-span-1 hidden md:block">
+      <div className="flex flex-1">
+        <div className="hidden md:block md:min-w-[200px]">
           <SidebarNav />
         </div>
-        <div className="col-span-6">{children}</div>
+        <div className="flex-1 pt-14">{children}</div>
       </div>
     </div>
   );

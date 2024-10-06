@@ -149,4 +149,13 @@
   body {
     @apply bg-background text-foreground font-body;
   }
+  *::-webkit-scrollbar {
+    display: none;
+  }
+  * {
+    -ms-overflow-style: none;
+  }
+  * {
+    scrollbar-width: none;
+  }
 }
