@@ -11,7 +11,8 @@ export class CommuneUsecase {
     }
 
     async createCommune(commune: Commune): Promise<any> {
-        return await this.communeRepository.createCommune(commune);
+        let savedCommune = await this.communeRepository.createCommune(commune);
+        return new Commune(savedCommune.toObject());
     }
 
     async joinCommune(communeId: string, userId: string): Promise<any> {

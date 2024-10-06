@@ -24,7 +24,7 @@ export class UserRepository {
   }
   async getUserByEmail(email: string): Promise<User> {
     try {
-      const user = await UserModel.findOne({ email });
+      const user = await UserModel.findOne({ email }).populate([{ path: "threads", select: ["title", "content", "createdBy", "createdAt"] }, { path: "friends", select: ["firstName", "lastName", "email"] }, { path: "communes", select: ["name", "description", "profileUri"] }]);
       if (!user) throw new HttpError(404, "User Not Found");
       return new User(user);
     } catch (err: any) {
