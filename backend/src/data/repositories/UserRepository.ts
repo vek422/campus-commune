@@ -48,4 +48,14 @@ export class UserRepository {
       throw new Error("Error at UserRepository.isUserExists: " + err.message);
     }
   }
+
+  addCommentToUser = async (userId: string, commentId: string): Promise<User> => {
+    try {
+      const updatedUser = await UserModel.findByIdAndUpdate(userId, { $push: { comments: commentId } });
+      if (!updatedUser) throw new HttpError(500, "Error adding comment to user");
+      return new User(updatedUser);
+    } catch (err: any) {
+      throw new Error("Error at UserRepository.addCommentToUser: " + err.message);
+    }
+  }
 }

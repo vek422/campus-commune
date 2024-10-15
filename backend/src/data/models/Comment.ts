@@ -2,10 +2,13 @@ import mongoose from "mongoose";
 
 interface IComment extends mongoose.Document {
   content: string;
-  image_uri: string;
-  liked_by: mongoose.Schema.Types.ObjectId[];
+  imagesUri: string[];
+  likedBy: mongoose.Schema.Types.ObjectId[];
   thread: mongoose.Schema.Types.ObjectId;
-  video_uri: string;
+  videosUri: string[];
+  createdBy: mongoose.Schema.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const commentSchema = new mongoose.Schema({
@@ -13,11 +16,11 @@ const commentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  image_uri: {
-    type: String,
+  imagesUri: {
+    type: [String],
     required: true,
   },
-  liked_by: {
+  likedBy: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "User",
   },
@@ -25,12 +28,19 @@ const commentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Thread",
   },
-  video_uri: {
-    type: String,
+  videosUri: {
+    type: [String],
     required: true,
   },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  }
+}, {
+  timestamps: true
 });
 
 const CommentModel = mongoose.model<IComment>("Comment", commentSchema);
 
-export default { CommentModel };
+export { CommentModel };
