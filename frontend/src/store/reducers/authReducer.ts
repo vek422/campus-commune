@@ -12,7 +12,7 @@ interface User {
   createdAt: string;
   updatedAt: string;
   __v: number;
-  id: string;
+  _id: string;
 }
 
 

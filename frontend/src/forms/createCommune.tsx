@@ -46,7 +46,7 @@ export const CreateCommuneForm: FC = () => {
   const onSubmit = (values: typeof initialValues) => {
     createCommune({
       ...values,
-      createdBy: user?.id as string,
+      createdBy: user?._id as string,
       profileUri: values?.profileImage?.name,
     });
   };
@@ -60,8 +60,8 @@ export const CreateCommuneForm: FC = () => {
       reader.readAsDataURL(file[0]);
     }
   };
-  if (data != null && data?.id) {
-    return <Navigate to={`/commune/${data.id}`} />;
+  if (data != null && data?._id) {
+    return <Navigate to={`/commune/${data._id}`} />;
   }
   return (
     <Form {...form}>
