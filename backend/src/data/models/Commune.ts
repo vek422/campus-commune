@@ -8,6 +8,8 @@ interface ICommune extends mongoose.Document {
     members: mongoose.Schema.Types.ObjectId[];
     channels: mongoose.Schema.Types.ObjectId[];
     createdBy: mongoose.Schema.Types.ObjectId;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const communeSchema = new mongoose.Schema({
@@ -35,6 +37,8 @@ const communeSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     }
+}, {
+    timestamps: true
 });
 
 const CommuneModel = mongoose.model<ICommune>("Commune", communeSchema);

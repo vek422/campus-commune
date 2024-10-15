@@ -7,29 +7,29 @@ import { HttpError } from "@utils/ErrorHandler/HttpError";
 export class ThreadRepository {
 
 
-    createThread = async (thread: Thread) => {
+    createThread = async (thread: Thread): Promise<Thread> => {
         try {
             const newThread = new ThreadModel(thread);
             const savedThreaad = await newThread.save();
-            return savedThreaad;
+            return new Thread(savedThreaad);
         }
         catch (err: any) {
             throw new Error("Error at ThreadRepository.createThread: " + err.message);
         }
     }
 
-    getThreadById = async (id: string) => {
+    getThreadById = async (id: string): Promise<Thread> => {
         try {
             const thread = await ThreadModel.findById(id);
             if (!thread) throw new HttpError(404, "Thread Not Found");
-            return thread;
+            return new Thread(thread);
         }
         catch (err: any) {
             throw new Error("Error at ThreadRepository.getThreadById: " + err.message);
         }
     }
 
-    getThreads = async () => {
+    getThreads = async (): Promise<Thread[]> => {
         try {
             const threads = await ThreadModel.find().limit(10);
             return threads;

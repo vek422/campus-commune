@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 interface IChannel extends mongoose.Document {
     name: string;
     threads: mongoose.Schema.Types.ObjectId[];
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const channelSchema = new mongoose.Schema({
@@ -15,6 +17,8 @@ const channelSchema = new mongoose.Schema({
         type: [mongoose.Schema.Types.ObjectId],
         ref: "Thread",
     },
+}, {
+    timestamps: true
 });
 
 const ChannelModel = mongoose.model<IChannel>("Channel", channelSchema);

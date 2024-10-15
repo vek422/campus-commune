@@ -11,21 +11,20 @@ interface IThread extends mongoose.Document {
   videoUri: string;
   channelId: mongoose.Schema.Types.ObjectId;
   createdBy: mongoose.Schema.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 
 }
 
 const threadSchema = new mongoose.Schema({
   title: {
     type: String,
-    // required: true,
   },
   content: {
     type: String,
-    // required: true,
   },
   imagesUri: {
     type: [String],
-    // required: true,
   },
   likedBy: {
     type: [mongoose.Schema.Types.ObjectId],
@@ -37,7 +36,6 @@ const threadSchema = new mongoose.Schema({
   },
   videoUri: {
     type: String,
-    // required: true,
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
@@ -47,6 +45,9 @@ const threadSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Channel",
   }
+
+}, {
+  timestamps: true
 });
 
 const ThreadModel = mongoose.model<IThread>("Thread", threadSchema);

@@ -16,7 +16,7 @@ export class ThreadUsecase {
         this.userRepository = new UserRepository();
     }
 
-    createThread = async (thread: Thread): Promise<any> => {
+    createThread = async (thread: Thread): Promise<Thread> => {
         //create a new thread
         const savedThread = await this.threadRepository.createThread(thread);
         if (!savedThread) throw new HttpError(500, "Error creating thread");
@@ -46,7 +46,7 @@ export class ThreadUsecase {
 
     postComment = async (threadId: string, content: string, createdBy: string): Promise<Comment> => {
         let savedComment = await this.threadRepository.postThreadComment(threadId, content, createdBy);
-        const user = await this.userRepository.addCommentToUser(createdBy, savedComment.id as string);
+        const user = await this.userRepository.addCommentToUser(createdBy, savedComment._id as string);
         savedComment.createdBy = user;
         console.log(user)
         console.log(savedComment.createdBy)

@@ -11,6 +11,8 @@ interface IUser extends Document {
   threads: mongoose.Schema.Types.ObjectId[];
   friends: mongoose.Schema.Types.ObjectId[];
   communes: mongoose.Schema.Types.ObjectId[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const userSchema = new mongoose.Schema({
@@ -49,6 +51,8 @@ const userSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Comment",
   }
+}, {
+  timestamps: true
 });
 
 const UserModel = mongoose.model<IUser>("User", userSchema);
