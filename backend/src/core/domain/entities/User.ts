@@ -5,7 +5,7 @@ interface UserProps {
   email: string;
   password: string;
   isPasswordHashed?: boolean;
-  _id: string | unknown;
+  _id?: string | unknown;
   threads?: string[] | object[];
   friends?: string[] | object[];
   communes?: string[] | object[];
@@ -18,7 +18,7 @@ export class User implements UserProps {
   public lastName: string;
   public email: string;
   public password: string;
-  public _id: string | unknown;
+  public _id?: string | unknown;
   public threads: string[] | object[];
   public friends: string[] | object[];
   public communes: string[] | object[];
@@ -41,7 +41,8 @@ export class User implements UserProps {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
-    this._id = _id;
+    if (_id)
+      this._id = _id;
     this.threads = threads;
     this.friends = friends;
     this.communes = communes;

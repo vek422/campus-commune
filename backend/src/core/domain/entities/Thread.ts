@@ -1,5 +1,5 @@
 interface ThreadProps {
-    _id: string | unknown,
+    _id?: string | unknown,
     title: string;
     content: string;
     imagesUri?: string[];
@@ -12,7 +12,7 @@ interface ThreadProps {
     updatedAt?: Date;
 }
 export class Thread implements ThreadProps {
-    public _id: string | unknown;
+    public _id?: string | unknown;
     public title: string;
     public content: string;
     public createdBy: string | object;
@@ -28,7 +28,8 @@ export class Thread implements ThreadProps {
     ) {
         this.title = title;
         this.content = content;
-        this._id = _id;
+        if (_id)
+            this._id = _id;
         if (createdAt)
             this.createdAt = createdAt;
         if (updatedAt)

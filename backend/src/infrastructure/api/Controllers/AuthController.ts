@@ -15,7 +15,7 @@ export class AuthController {
       const { email, password } = req.body;
       const user = await this.userUsecase.login({ email, password });
       //generate JWT token
-      const token = generateToken(user.email, user.id);
+      const token = generateToken(user.email, user._id);
       res.status(200).json({ user, token }).end();
     } catch (err: any) {
       if (err instanceof HttpError) {
