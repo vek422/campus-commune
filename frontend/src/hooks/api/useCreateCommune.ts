@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useToast } from "../use-toast";
 import axios from "axios";
 import { BACKEND_BASE_URL } from "@/config/config";
+import { useAppSelector } from "@/store/store";
 
 interface CreateCommuneValues {
     name: string;
@@ -15,7 +16,7 @@ export const useCreateCommune = () => {
     const [error, setError] = useState<string | null>(null);
     const [data, setData] = useState<object | null>(null)
     const { toast } = useToast();
-
+    const { token } = useAppSelector(state => state.auth)
 
     const createCommune = async (values: CreateCommuneValues) => {
         setIsLoading(true);
@@ -24,13 +25,21 @@ export const useCreateCommune = () => {
             const formData = new FormData();
             formData.append("name", values.name);
             formData.append("description", values.description);
-            if (values.profileImage) {
-                formData.append("profileImage", values.profileUri);
+            if (values?.profileImage) {
+                formData.append('profileImage', values.profileImage);
             }
-            console.log(values.createdBy)
             formData.append("createdBy", values.createdBy);
-            formData.append("profileUri", values.profileUri);
-            const response = await axios.post(`${BACKEND_BASE_URL}/commune/create`, formData);
+            formData.append('profileUri', values.profileUri);
+
+            for (const [key, value] of formData.entries()) {
+                console.log(key, value);
+            }
+            const response = await axios.postForm(`${BACKEND_BASE_URL}/commune/create`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    "Authorization": `Bearer ${token}}`
+                }
+            });
             if (response.status !== 200) {
                 toast({
                     title: "Failed to create commune",

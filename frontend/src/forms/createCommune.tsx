@@ -35,16 +35,15 @@ const schema = z.object({
 
 export const CreateCommuneForm: FC = () => {
   const { user } = useAppSelector((state) => state.auth);
-  const { toast } = useToast();
-
+  //TODO: Add a toast message for success and error
   const { createCommune, isLoading, error, data } = useCreateCommune();
+  console.log("Error : ", error);
   const form = useForm<typeof initialValues>({
     resolver: zodResolver(schema),
     defaultValues: initialValues,
   });
 
   const onSubmit = (values: typeof initialValues) => {
-    console.log(values);
     createCommune({
       ...values,
       createdBy: user?.id as string,

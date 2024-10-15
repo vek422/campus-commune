@@ -10,9 +10,9 @@ export class ThreadController {
     }
 
     createThread = async (req: Request, res: Response) => {
-        const { title, content, createdBy, imageUri, videoUri } = req.body;
+        const { title, content, createdBy, imagesUri, videoUri, images, channelId } = req.body;
         try {
-            const result = await this.threadUseCases.createThread(new Thread({ title, content, createdBy, imageUri, videoUri }));
+            const result = await this.threadUseCases.createThread(new Thread({ title, content, createdBy, imagesUri, videoUri, channelId }));
             res.status(201).json(result);
         } catch (error) {
             if (error instanceof HttpError) {

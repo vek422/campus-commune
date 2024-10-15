@@ -1,7 +1,9 @@
 import { Commune } from "@core/domain/entities/Commune";
+import { ChannelModel } from "@data/models/channel";
 import { CommuneModel } from "@data/models/Commune";
 import { UserModel } from "@data/models/User";
 import { HttpError } from "@utils/ErrorHandler/HttpError";
+import mongoose from "mongoose";
 
 
 export class CommuneRepository {
@@ -23,7 +25,7 @@ export class CommuneRepository {
     }
     async getCommuneById(id: string): Promise<any> {
         try {
-            const commune = await CommuneModel.findById(id).populate([{ path: "members", select: ["firstName", "lastName", "_id"] }, { path: "createdBy", select: ["firstName", "lastName", "_id"] }]);
+            const commune = await CommuneModel.findById(id).populate([{ path: "members", select: ["firstName", "lastName", "_id"] }, { path: "createdBy", select: ["firstName", "lastName", "_id"] }, { path: "channels", select: ["name", "_id"] }]);
             if (commune === null) throw new HttpError(404, "Commune Not Found")
             return commune;
         } catch (err: any) {
@@ -40,6 +42,46 @@ export class CommuneRepository {
             return commune;
         } catch (err: any) {
             throw new Error("Error at CommuneRepository.joinCommune: " + err.message);
+        }
+    }
+
+    getCommuneChannels = async (communedId: string) => {
+        try {
+            console.log(communedId);
+            const isIdValid = mongoose.Types.ObjectId.isValid(communedId);
+            if (!isIdValid) throw new HttpError(400, "Invalid Request Data")
+            const commune = await CommuneModel.findById(communedId).populate("channels");
+
+            if (!commune) throw new HttpError(404, "Invalid Commune")
+            return commune?.channels;
+        } catch (err: any) {
+            if (err instanceof HttpError) throw err
+            throw new Error("Error at CommuneRepository.getCommuneChannels : " + err.message)
+        }
+    }
+
+    addChannel = async (communeId: string, channelName: string) => {
+        try {
+            const newChannel = new ChannelModel({ name: channelName });
+            const savedChannel = await newChannel.save();
+            const updatedCommune = await CommuneModel.findByIdAndUpdate(communeId, { $addToSet: { channels: savedChannel._id } })
+            return savedChannel;
+        } catch (err: any) {
+            throw new Error("Error At CommuneRepository.addChannel : " + err.message)
+        }
+    }
+
+    getCommuneChannel = async (communeId: string, channelId: string) => {
+        try {
+            const channel = await ChannelModel.findById(channelId).populate({
+                path: 'threads',
+                populate: {
+                    path: 'createdBy'
+                }
+            });
+            return channel;
+        } catch (err: any) {
+            throw new Error("Something went wrong : " + err.message);
         }
     }
 

@@ -12,7 +12,7 @@ export default function NavLink({
     <Link to={href} className="max-w-min">
       <Button
         variant={"link"}
-        className="text-secondary-foreground hover:text-foreground hover:no-underline active:font-semibold"
+        className="text-foreground hover:text-foreground hover:no-underline active:font-semibold"
       >
         {children}
       </Button>

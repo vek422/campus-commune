@@ -3,31 +3,38 @@ export class Thread {
     public title: string;
     public content: string;
     public createdBy: string | object;
-    public imageUri: string;
     public likedBy: string[] | object[];
     public comments: string[] | object[];
-    public videoUri: string;
+    public imagesUri?: string[];
+    public videoUri?: string;
+    public channelId?: string | object;
     constructor(
-        { title, content, imageUri, likedBy, comments, createdBy, videoUri }: {
+        { title, content, imagesUri, likedBy, comments, createdBy, videoUri, channelId }: {
             title: string;
             content: string;
-            imageUri?: string;
+            imagesUri?: string[];
             likedBy?: string[] | object[];
             comments?: string[] | object[];
             videoUri?: string;
             createdBy: string | object;
+            channelId?: string | object;
         }
     ) {
         this.title = title;
         this.content = content;
 
-        this.imageUri = imageUri || "";
+        if (imagesUri)
+            this.imagesUri = imagesUri;
 
         this.likedBy = likedBy || [];
 
         this.comments = comments || [];
 
-        this.videoUri = videoUri || "";
+        if (videoUri)
+            this.videoUri = videoUri;
         this.createdBy = createdBy;
+
+        if (channelId)
+            this.channelId = channelId
     }
 }

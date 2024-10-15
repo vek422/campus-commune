@@ -15,12 +15,12 @@ export default function Register() {
       <Topbar />
       <Card className="bg-transparent min-w-96 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle>Register</CardTitle>
+          <CardTitle className="text-2xl font-bold">Register</CardTitle>
         </CardHeader>
         <CardContent>
           <RegisterForm />
         </CardContent>
-        <CardFooter className="flex gap-1 justify-end text-secondary-foreground text-xs">
+        <CardFooter className="flex gap-1 justify-end  text-xs">
           <p className="">Already have an account?</p>
           <Link to="/login" className="text-primary underline">
             login

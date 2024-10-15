@@ -12,7 +12,11 @@ export class CommuneUsecase {
 
     async createCommune(commune: Commune): Promise<any> {
         let savedCommune = await this.communeRepository.createCommune(commune);
-        return new Commune(savedCommune.toObject());
+        //add default channel general to the the commune
+        let savedChannel = await this.addChannel(savedCommune._id, "General");
+        savedCommune = await savedCommune.toObject();
+        savedCommune.channels.push(savedChannel);
+        return new Commune(savedCommune);
     }
 
     async joinCommune(communeId: string, userId: string): Promise<any> {
@@ -20,5 +24,14 @@ export class CommuneUsecase {
     }
     async getCommune(communeId: string): Promise<any> {
         return await this.communeRepository.getCommuneById(communeId);
+    }
+    getCommuneChannels = async (communeId: string) => {
+        return await this.communeRepository.getCommuneChannels(communeId);
+    }
+    addChannel = async (communeId: string, channelName: string) => {
+        return await this.communeRepository.addChannel(communeId, channelName);
+    }
+    getChannelInfo = async (communeId: string, channelId: string) => {
+        return await this.communeRepository.getCommuneChannel(communeId, channelId);
     }
 }
