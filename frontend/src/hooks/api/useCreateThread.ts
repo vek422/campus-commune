@@ -2,6 +2,7 @@ import { BACKEND_BASE_URL } from "@/config/config";
 import { useAppSelector } from "@/store/store";
 import axios from "axios";
 import { useState } from "react"
+import { useToast } from "../use-toast";
 
 export const useCreateThread = () => {
 
@@ -9,6 +10,7 @@ export const useCreateThread = () => {
     const [thread, setThread] = useState(null);
     const [error, setError] = useState(null);
 
+    const { toast } = useToast();
     const { token, user } = useAppSelector(state => state.auth)
     const createThread = async (values) => {
         if (!values) return;
@@ -39,10 +41,19 @@ export const useCreateThread = () => {
                     "Content-Type": "multipart/form-data"
                 }
             })
+            //set thread
+            setThread(data)
+            //show toast
+            toast({
+                title: "Thread created successfully"
+            })
 
-            console.log(data)
+            //update the store
+
         } catch (err) {
             setError(err.message)
+        } finally {
+            setIsLoading(false)
         }
     }
 

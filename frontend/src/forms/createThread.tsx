@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useCreateThread } from "@/hooks/api/useCreateThread";
 import { useParams } from "react-router-dom";
+import { LoadingButton } from "@/components/ui/loadingButton";
 
 const initialValues = {
   title: "",
@@ -33,13 +34,18 @@ const schema = z.object({
   videos: z.any().optional(),
 });
 
-export function CreateThreadForm() {
+export function CreateThreadForm({ closeDialog }) {
   const { error, thread, createThread, isLoading } = useCreateThread();
   const { channelId } = useParams();
   const onSubmit = (values: typeof initialValues) => {
-    console.log(values);
     createThread({ ...values, channelId });
   };
+
+  useEffect(() => {
+    if (thread) {
+      closeDialog();
+    }
+  }, [thread]);
 
   const [imagePreviews, setImagePreviews] = useState<string[] | null>(null);
 
@@ -141,9 +147,9 @@ export function CreateThreadForm() {
             </FormItem>
           )}
         />
-        <Button variant={"default"} type="submit">
+        <LoadingButton variant={"default"} type="submit" isLoading={isLoading}>
           Post
-        </Button>
+        </LoadingButton>
       </form>
     </Form>
   );

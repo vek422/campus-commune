@@ -15,6 +15,7 @@ export const LoadingButton: FC<LoadingButtonProps> = ({
       variant={variant}
       className={props.className}
       disabled={props.isLoading}
+      onClick={props.onClick}
     >
       {props.isLoading && (
         <LoaderCircle className="animate-spin mr-2 h-4 w-4" />

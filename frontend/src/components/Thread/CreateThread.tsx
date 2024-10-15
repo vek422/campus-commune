@@ -1,18 +1,24 @@
+import { useState } from "react";
 import { CreateThreadForm } from "@/forms/createThread";
 import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTrigger,
 } from "../ui/dialog";
 
 export const CreateThread = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const closeDialog = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <Dialog>
-      <DialogTrigger>
-        <Button>Add Thread</Button>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button onClick={() => setIsOpen(true)}>Add Thread</Button>
       </DialogTrigger>
       <DialogContent className="overflow-hidden">
         <>
@@ -20,7 +26,7 @@ export const CreateThread = () => {
             Create New Thread
           </DialogHeader>
           <div className="w-full">
-            <CreateThreadForm />
+            <CreateThreadForm closeDialog={closeDialog} />
           </div>
         </>
       </DialogContent>
