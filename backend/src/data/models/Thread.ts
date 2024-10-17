@@ -2,7 +2,6 @@ import { channel } from "diagnostics_channel";
 import mongoose from "mongoose";
 
 interface IThread extends mongoose.Document {
-
   title: string;
   content: string;
   imagesUri: string[];
@@ -13,7 +12,6 @@ interface IThread extends mongoose.Document {
   createdBy: mongoose.Schema.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
-
 }
 
 const threadSchema = new mongoose.Schema({

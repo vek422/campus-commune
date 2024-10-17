@@ -10,4 +10,6 @@ ThreadRouter.get("/", threadController.getThreads);
 ThreadRouter.get("/:threadId", threadController.getThread);
 ThreadRouter.get("/:threadId/comments", threadController.getComments);
 ThreadRouter.post("/:threadId/comment", threadController.postComment);
+ThreadRouter.post("/:threadId/comment/:commentId/reply", threadController.postCommentReply);
+ThreadRouter.get("/:threadId/comment/:commentId/replies", threadController.getCommentReplies);
 export { ThreadRouter }

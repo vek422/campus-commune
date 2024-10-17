@@ -53,4 +53,18 @@ export class ThreadUsecase {
         if (!savedComment) throw new HttpError(500, "Error posting comment");
         return savedComment;
     }
+
+    postCommentReply = async (threadId: string, commentId: string, content: string, createdBy: string): Promise<Comment> => {
+        let savedComment = await this.threadRepository.postCommentReply(threadId, commentId, content, createdBy);
+        const user = await this.userRepository.addCommentToUser(createdBy, savedComment._id as string);
+        savedComment.createdBy = user;
+        if (!savedComment) throw new HttpError(500, "Error posting comment");
+        return savedComment;
+    }
+    getCommentReplies = async (threadId: string, commentId: string, limit: number, pageNumber: number): Promise<any> => {
+        const { comments,
+            total,
+            hasMore } = await this.threadRepository.getCommentReplies(threadId, commentId, limit, pageNumber);
+        return { comments, total, hasMore, page: pageNumber };
+    }
 }

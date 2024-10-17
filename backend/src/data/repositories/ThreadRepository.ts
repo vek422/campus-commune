@@ -3,6 +3,7 @@ import { Thread } from "@core/domain/entities/Thread";
 import { CommentModel } from "@data/models/Comment";
 import ThreadModel from "@data/models/Thread";
 import { HttpError } from "@utils/ErrorHandler/HttpError";
+import mongoose from "mongoose";
 
 export class ThreadRepository {
 
@@ -85,5 +86,49 @@ export class ThreadRepository {
         }
     }
 
+    getCommentReplies = async (threadId: string, commentId: string, limit: number, pageNumber: number) => {
+        try {
+            console.log("CommentId : ", commentId)
+            const skip = Math.max((pageNumber - 1) * limit, 0);
+            const comments = await CommentModel.find({ parent: new mongoose.Types.ObjectId(commentId) })
+                .limit(limit)
+                .skip(skip)
+                .populate("createdBy");
+            console.log("comments : ", comments)
+            const total = await CommentModel.countDocuments({ parent: new mongoose.Types.ObjectId(commentId) });
+            console.log("skip : ", skip)
+            const currentCount = comments.length;
+            const hasMore = currentCount + skip < total;
+
+            if (!comments) throw new HttpError(404, "Thread Not Found");
+            return {
+                comments,
+                total,
+                hasMore
+            };
+        }
+        catch (err: any) {
+            throw new Error("Error at ThreadRepository.getCommentReplies: " + err.message);
+        }
+    }
+    postCommentReply = async (threadId: string, commentId: string, content: string, createdBy: string): Promise<Comment> => {
+        try {
+            const newComment = new CommentModel({ content, createdBy, thread: threadId, parent: commentId });
+            const savedComment = await newComment.save();
+            if (savedComment) {
+                const x = await CommentModel.findByIdAndUpdate(commentId, {
+                    $push: {
+                        replies: savedComment._id
+                    }
+                });
+                console.log("x", x)
+            }
+            console.log(savedComment);
+            console.log(commentId);
+            return new Comment(savedComment);
+        } catch (err: any) {
+            throw new Error("Error at ThreadRepository.postCommentReply: " + err.message);
+        }
+    }
 
 }

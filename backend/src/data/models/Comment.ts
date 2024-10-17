@@ -9,6 +9,8 @@ interface IComment extends mongoose.Document {
   createdBy: mongoose.Schema.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
+  replies: mongoose.Schema.Types.ObjectId[];
+  parent: mongoose.Schema.Types.ObjectId[];
 }
 
 const commentSchema = new mongoose.Schema({
@@ -36,6 +38,14 @@ const commentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true
+  },
+  replies: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Comment"
+  },
+  parent: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Comment"
   }
 }, {
   timestamps: true

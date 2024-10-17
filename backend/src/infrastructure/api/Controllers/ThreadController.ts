@@ -81,4 +81,35 @@ export class ThreadController {
             res.status(500).json({ message: err.message });
         }
     }
+    postCommentReply = async (req: Request, res: Response) => {
+        try {
+            const { threadId, commentId } = req.params;
+            const { content, createdBy } = req.body;
+            const savedComment = await this.threadUseCases.postCommentReply(threadId, commentId, content, createdBy);
+            if (savedComment) {
+                res.status(201).json({ comment: savedComment }).end();
+            }
+        } catch (err: any) {
+            console.log(err)
+            if (err instanceof HttpError) {
+                return res.status(err.status).json({ message: err.message })
+            }
+            return res.status(500).json({ message: err.message })
+        }
+    }
+    getCommentReplies = async (req: Request, res: Response) => {
+        try {
+            const { threadId, commentId } = req.params;
+            console.log("commentId from controller: ", commentId)
+            const { limit, page } = req.query;
+            const { comments, total, hasMore } = await this.threadUseCases.getCommentReplies(threadId, commentId, Number(limit), Number(page));
+            return res.status(200).json({ comments, total, hasMore, page });
+        } catch (err: any) {
+            console.log(err)
+            if (err instanceof HttpError) {
+                return res.status(err.status).json({ message: err.message });
+            }
+            res.status(500).json({ message: err.message });
+        }
+    }
 }
