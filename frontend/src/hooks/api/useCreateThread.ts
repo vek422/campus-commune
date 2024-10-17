@@ -21,7 +21,7 @@ export const useCreateThread = () => {
             formData.append('channelId', values.channelId)
             formData.append('title', values.title)
             formData.append('content', values.content)
-            formData.append('createdBy', user.id)
+            formData.append('createdBy', user._id)
 
             for (const image of values.images) {
                 formData.append('images', image)
