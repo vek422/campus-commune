@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { Thread } from "@/components/Thread/Thread";
 import { Button } from "@/components/ui/button";
 import { CreateThread } from "@/components/Thread/CreateThread";
+import { ThreadCardLoader } from "@/components/Loaders/ThreadCardLoader";
 
 export default function Channel() {
   const { communeId, channelId } = useParams();
@@ -13,7 +14,6 @@ export default function Channel() {
     communeId,
     channelId
   );
-  console.log("channel", channel);
   useEffect(() => {
     fetchChannel();
   }, [channelId]);
@@ -28,11 +28,13 @@ export default function Channel() {
             channelName={channel?.name}
           />
         </div>
-        <div className="flex flex-col flex-1 pb-20 gap-5  w-full overflow-scroll">
-          {channel &&
-            channel?.threads.map((thread) => {
-              return <Thread key={thread._id} thread={thread} />;
-            })}
+        <div className="pt-5 flex flex-col flex-1 pb-20 gap-5  w-full overflow-scroll transition-all duration-1000">
+          {isLoading
+            ? new Array(5).fill(0).map((_, i) => <ThreadCardLoader key={i} />)
+            : channel &&
+              channel?.threads.map((thread) => {
+                return <Thread key={thread._id} thread={thread} />;
+              })}
         </div>
       </div>
       <div className="w-1/4 h-screen px-10 py-5 ">

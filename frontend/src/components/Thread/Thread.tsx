@@ -21,23 +21,23 @@ export function Thread({ thread }) {
     flex flex-col gap-2 transition-all duration-500"
     >
       <div className="flex gap-2 ">
-        <Avatar className="h-10 w-10">
+        <Avatar className="h-7 w-7">
           <AvatarImage
             src={`${BACKEND_BASE_URL}/static/${thread?.createdBy.profileUri}`}
             className="object-cover"
           />
-          <AvatarFallback>
+          <AvatarFallback className="text-xs">
             {thread?.createdBy?.firstName[0] + thread?.createdBy?.lastName[0]}
           </AvatarFallback>
         </Avatar>
-        <div className="flex gap-2 flex-col w-full">
+        <div className="flex gap-1 flex-col w-full">
           <div>
             <p className="text-sm">{`${thread?.createdBy?.firstName} ${thread?.createdBy?.lastName}`}</p>
             <p className="text-xs">{calculateAge(thread?.createdAt)}</p>
           </div>
           <h1 className="text-xl font-bold">{thread?.title}</h1>
           <p className="text-sm font-semibold">{thread?.content}</p>
-          <ThreadMedia images={thread?.imagesUri} />
+          {/* <ThreadMedia images={thread?.imagesUri} /> */}
           <ThreadToolbar
             toggleComment={() => setShowComments((state) => !state)}
           />
@@ -138,9 +138,6 @@ function ThreadComments({ thread }) {
 }
 
 function ThreadCommentCard({ comment, threadId }) {
-  console.log("comment : ", comment);
-  console.log("threadID", threadId);
-  const { user } = useAppSelector((state) => state.auth);
   const [showComments, setShowComments] = useState(false);
   const { comments, isLoading, error, fetchCommentReplies, hasMore } =
     useFetchCommentReplies({ threadId, commentId: comment._id });
@@ -169,14 +166,17 @@ function ThreadCommentCard({ comment, threadId }) {
       <div className="pl-9 flex flex-col gap-2">
         <p className="text-sm font-semibold">{comment.content}</p>
         <div className="flex gap-2">
-          <Heart size={20} />
+          <Button size={"icon"} variant={"ghost"}>
+            <Heart size={14} />
+          </Button>
           <Button
+            variant={"ghost"}
             size={"icon"}
             onClick={() => {
               setShowComments((state) => !state);
             }}
           >
-            <MessageSquare size={20} />
+            <MessageSquare size={14} />
           </Button>
         </div>
         {showComments && (
@@ -184,7 +184,7 @@ function ThreadCommentCard({ comment, threadId }) {
             {/*  Add Reply*/}
             <PostCommentReply commentId={comment._id} threadId={threadId} />
             {/* Comment Replies */}
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full gap-2">
               {comments &&
                 comments.map((reply) => (
                   <ThreadCommentCard
@@ -237,12 +237,21 @@ function PostCommentReply({ commentId, threadId }) {
 
 function ThreadToolbar({ toggleComment }) {
   return (
-    <div className="h-10 gap-5 rounded-lg flex items-center max-w-min ">
-      <Button variant={"ghost"} size={"icon"} onClick={toggleComment}>
-        <MessageSquare size={20} />
+    <div className="h-10 rounded-lg flex items-center max-w-min ">
+      <Button
+        variant={"ghost"}
+        size={"icon"}
+        className=""
+        onClick={toggleComment}
+      >
+        <MessageSquare size={16} />
       </Button>
-      <Heart size={20} />
-      <Bookmark size={20} />
+      <Button variant={"ghost"} className="" size={"icon"}>
+        <Heart size={16} />
+      </Button>
+      <Button variant={"ghost"} size={"icon"}>
+        <Bookmark size={16} />
+      </Button>
     </div>
   );
 }
