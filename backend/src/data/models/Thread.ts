@@ -1,4 +1,3 @@
-import { channel } from "diagnostics_channel";
 import mongoose from "mongoose";
 
 interface IThread extends mongoose.Document {

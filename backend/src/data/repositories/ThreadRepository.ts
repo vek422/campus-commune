@@ -43,17 +43,36 @@ export class ThreadRepository {
     getComments = async (threadId: string, limit: number, pageNumber: number) => {
         try {
             const skip = Math.max((pageNumber - 1) * limit, 0);
-            console.log("skip : ", skip)
-            const comments = await CommentModel.find({ thread: threadId }).limit(limit).skip(skip).populate("createdBy");
-            const total = await CommentModel.countDocuments({ thread: threadId });
-            const currentCount = comments.length;
-            console.log("currentCount : ", currentCount)
-            console.log("total : ", total)
+
+            const [thread, commentCount] = await Promise.all([
+                ThreadModel.findById(threadId)
+                    .populate({
+                        path: 'comments',
+                        populate: {
+                            path: 'createdBy',
+                        },
+                        options: {
+                            skip: (pageNumber - 1) * limit,
+                            limit: limit,
+                            sort: { createdAt: -1 },
+                        },
+                    }),
+                ThreadModel.aggregate([
+                    { $match: { _id: new mongoose.Types.ObjectId(threadId) } },
+                    { $project: { commentCount: { $size: '$comments' } } },
+                ]),
+            ]);
+            console.log("Thread : ", thread);
+            console.log("CommentCount : ", commentCount);
+            console.log("Comments : ", thread?.comments);
+            if (!thread) throw new HttpError(404, "Thread Not Found");
+
+            const total = commentCount[0]?.commentCount || 0;
+            const currentCount = thread?.comments?.length || 0;
             const hasMore = currentCount + skip < total;
 
-            if (!comments) throw new HttpError(404, "Thread Not Found");
             return {
-                comments,
+                comments: thread?.comments,
                 total,
                 hasMore
             };
