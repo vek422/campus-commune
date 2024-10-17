@@ -9,9 +9,8 @@ import { useAppSelector } from "@/store/store";
 import { useFetchThreadComments } from "@/hooks/api/useFetchThreadComments";
 import { LoadingButton } from "../ui/loadingButton";
 import { usePostComment } from "@/hooks/api/usePostComment";
-import { calculateAge } from "@/util/calculateAge";
+import { calculateAge } from "@/lib/calculateAge";
 import { usePostCommentReply } from "@/hooks/api/usePostCommentReply";
-import { useParams } from "react-router-dom";
 import { useFetchCommentReplies } from "@/hooks/api/useFetchCommentReplies";
 export function Thread({ thread }) {
   const [showComments, setShowComments] = useState(false);
