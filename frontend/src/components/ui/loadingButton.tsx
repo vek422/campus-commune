@@ -17,10 +17,11 @@ export const LoadingButton: FC<LoadingButtonProps> = ({
       disabled={props.isLoading}
       onClick={props.onClick}
     >
-      {props.isLoading && (
+      {props.isLoading ? (
         <LoaderCircle className="animate-spin mr-2 h-4 w-4" />
+      ) : (
+        props.children
       )}
-      {props.children}
     </Button>
   );
 };

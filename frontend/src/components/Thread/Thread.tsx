@@ -12,13 +12,13 @@ import { usePostComment } from "@/hooks/api/usePostComment";
 import { calculateAge } from "@/lib/calculateAge";
 import { usePostCommentReply } from "@/hooks/api/usePostCommentReply";
 import { useFetchCommentReplies } from "@/hooks/api/useFetchCommentReplies";
+import { Card } from "../ui/card";
 export function Thread({ thread }) {
   const [showComments, setShowComments] = useState(false);
-  console.log("thread", thread);
   return (
-    <div
-      className="w-full  min-h-max bg-secondary/30 border border-secondary rounded-xl p-2 
-    flex flex-col gap-2 transition-all duration-500"
+    <Card
+      className="w-full  h-auto bg-secondary/5 border border-secondary rounded-xl p-2 
+    flex flex-col gap-2 "
     >
       <div className="flex gap-2 ">
         <Avatar className="h-7 w-7">
@@ -31,25 +31,20 @@ export function Thread({ thread }) {
           </AvatarFallback>
         </Avatar>
         <div className="flex gap-1 flex-col w-full">
-          <div>
+          <div className="flex items-end gap-2">
             <p className="text-sm">{`${thread?.createdBy?.firstName} ${thread?.createdBy?.lastName}`}</p>
             <p className="text-xs">{calculateAge(thread?.createdAt)}</p>
           </div>
           <h1 className="text-xl font-bold">{thread?.title}</h1>
           <p className="text-sm font-semibold">{thread?.content}</p>
-          {/* <ThreadMedia images={thread?.imagesUri} /> */}
+          <ThreadMedia images={thread?.imagesUri} />
           <ThreadToolbar
             toggleComment={() => setShowComments((state) => !state)}
           />
-          {showComments && (
-            <>
-              <AddThreadComment threadId={thread._id} />
-              <ThreadComments thread={thread} />
-            </>
-          )}
+          {showComments && <ThreadComments thread={thread} />}
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -66,11 +61,12 @@ const ThreadMedia = ({ images }: { images?: string[]; videos?: string[] }) => {
     </div>
   );
 };
-function AddThreadComment({ threadId }) {
+function AddThreadComment({ threadId, addCommentOptmistically }) {
   const { user } = useAppSelector((state) => state.auth);
   const [content, setContent] = useState("");
 
-  const { isLoading, error, postComment, success } = usePostComment(threadId);
+  const { isLoading, error, postComment, success, savedComment } =
+    usePostComment(threadId);
   const handlePostComment = () => {
     if (content.length > 0) postComment(content, user?._id as string);
   };
@@ -78,9 +74,9 @@ function AddThreadComment({ threadId }) {
   useEffect(() => {
     if (success) {
       setContent("");
+      if (savedComment) addCommentOptmistically(savedComment);
     }
-    console.log(success);
-  }, [success]);
+  }, [success, savedComment]);
   return (
     <div className=" flex gap-2 items-center w-full">
       <Avatar className="w-7 h-7">
@@ -111,14 +107,24 @@ function AddThreadComment({ threadId }) {
 }
 
 function ThreadComments({ thread }) {
-  console.log("thread", thread);
-  const { comments, isLoading, error, fetchThreadComments, hasMore } =
-    useFetchThreadComments(thread._id);
+  const {
+    comments,
+    isLoading,
+    error,
+    fetchThreadComments,
+    hasMore,
+    addCommentOptimistically,
+  } = useFetchThreadComments(thread._id);
   useEffect(() => {
     fetchThreadComments();
   }, []);
+  console.log("1");
   return (
     <div className="flex flex-col gap-2">
+      <AddThreadComment
+        threadId={thread._id}
+        addCommentOptmistically={addCommentOptimistically}
+      />
       {comments &&
         comments.map((comment) => (
           <ThreadCommentCard
@@ -129,7 +135,11 @@ function ThreadComments({ thread }) {
         ))}
       {isLoading && <p>Loading...</p>}
       {hasMore && (
-        <Button onClick={fetchThreadComments} variant={"link"}>
+        <Button
+          onClick={fetchThreadComments}
+          variant={"link"}
+          className="text-primary-foreground"
+        >
           Load More
         </Button>
       )}
@@ -139,12 +149,15 @@ function ThreadComments({ thread }) {
 
 function ThreadCommentCard({ comment, threadId }) {
   const [showComments, setShowComments] = useState(false);
-  const { comments, isLoading, error, fetchCommentReplies, hasMore } =
-    useFetchCommentReplies({ threadId, commentId: comment._id });
+  const {
+    comments,
+    isLoading,
+    error,
+    fetchCommentReplies,
+    hasMore,
+    addReplyOptimistically,
+  } = useFetchCommentReplies({ threadId, commentId: comment._id });
 
-  useEffect(() => {
-    fetchCommentReplies();
-  }, []);
   console.log("replies:", comments);
   useEffect(() => {
     if (showComments) fetchCommentReplies();
@@ -182,7 +195,11 @@ function ThreadCommentCard({ comment, threadId }) {
         {showComments && (
           <>
             {/*  Add Reply*/}
-            <PostCommentReply commentId={comment._id} threadId={threadId} />
+            <PostCommentReply
+              commentId={comment._id}
+              threadId={threadId}
+              addReplyOptimistically={addReplyOptimistically}
+            />
             {/* Comment Replies */}
             <div className="flex flex-col w-full gap-2">
               {comments &&
@@ -194,6 +211,15 @@ function ThreadCommentCard({ comment, threadId }) {
                   />
                 ))}
             </div>
+            {hasMore && (
+              <Button
+                variant={"link"}
+                onClick={fetchCommentReplies}
+                className="text-primary-foreground"
+              >
+                Load More
+              </Button>
+            )}
           </>
         )}
       </div>
@@ -201,9 +227,9 @@ function ThreadCommentCard({ comment, threadId }) {
   );
 }
 
-function PostCommentReply({ commentId, threadId }) {
+function PostCommentReply({ commentId, threadId, addReplyOptimistically }) {
   console.log("Thread Id", threadId);
-  const { isLoading, error, success, postCommentReply } =
+  const { isLoading, error, success, postCommentReply, savedReply } =
     usePostCommentReply(threadId);
   const { user } = useAppSelector((state) => state.auth);
   const [content, setContent] = useState("");
@@ -218,17 +244,19 @@ function PostCommentReply({ commentId, threadId }) {
   useEffect(() => {
     if (success) {
       setContent("");
+      if (savedReply) addReplyOptimistically(savedReply);
     }
-  }, [success]);
+  }, [success, savedReply]);
 
   return (
     <div className="flex gap-2">
       <Input
         type="text"
         value={content}
+        placeholder="comment"
         onChange={(e) => setContent(e.target.value)}
       />
-      <LoadingButton onClick={handlePostReply}>
+      <LoadingButton onClick={handlePostReply} isLoading={isLoading}>
         <SendHorizonal size={20} />
       </LoadingButton>
     </div>

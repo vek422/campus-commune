@@ -1,22 +1,19 @@
 import { useOutletContext, useParams } from "react-router-dom";
 import { ChannelBreadcrumbs } from "./Components/ChannelBreadcrumbs";
 import { useFetchChannel } from "@/hooks/api/useFetchChannel";
-import { useEffect, useRef } from "react";
+
 import { Thread } from "@/components/Thread/Thread";
-import { Button } from "@/components/ui/button";
 import { CreateThread } from "@/components/Thread/CreateThread";
 import { ThreadCardLoader } from "@/components/Loaders/ThreadCardLoader";
+import { useEffect } from "react";
 
 export default function Channel() {
   const { communeId, channelId } = useParams();
   const [commune] = useOutletContext();
-  const { isLoading, error, channel, fetchChannel } = useFetchChannel(
+  const { isLoading, error, channel } = useFetchChannel({
     communeId,
-    channelId
-  );
-  useEffect(() => {
-    fetchChannel();
-  }, [channelId]);
+    channelId,
+  });
 
   return (
     <div className="flex ">

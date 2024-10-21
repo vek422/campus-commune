@@ -7,6 +7,7 @@ export const usePostCommentReply = (threadId: string | undefined) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
+    const [savedReply, setSavedReply] = useState(null);
     const { toast } = useToast()
     const postCommentReply = async ({ commentId, content, createdBy }: { commentId: string, content: string, createdBy: string }) => {
         setIsLoading(true);
@@ -15,8 +16,11 @@ export const usePostCommentReply = (threadId: string | undefined) => {
 
         try {
             const { data, status } = await axios.post(`${BACKEND_BASE_URL}/thread/${threadId}/comment/${commentId}/reply`, { content, createdBy })
-            console.log(data, status);
+            if (status !== 201) {
+                throw new Error("Failed to post comment")
+            }
             setSuccess(true);
+            setSavedReply(data.comment);
             toast({
                 title: "Added Comment",
                 duration: 3000
@@ -37,6 +41,7 @@ export const usePostCommentReply = (threadId: string | undefined) => {
         isLoading,
         error,
         success,
+        savedReply,
         postCommentReply
     }
 }

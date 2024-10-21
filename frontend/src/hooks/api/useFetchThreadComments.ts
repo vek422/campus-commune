@@ -9,6 +9,7 @@ export const useFetchThreadComments = (threadId: string) => {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(false);
     const limit = 5;
+
     const fetchThreadComments = async () => {
         setIsLoading(true);
         try {
@@ -26,12 +27,17 @@ export const useFetchThreadComments = (threadId: string) => {
             setIsLoading(false)
         }
     }
+    const addCommentOptimistically = (comment) => {
+        setComments(state => [comment, ...state]);
+    }
+
 
     return {
         comments,
         isLoading,
         error,
         fetchThreadComments,
-        hasMore
+        hasMore,
+        addCommentOptimistically
     }
 }

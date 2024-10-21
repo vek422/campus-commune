@@ -40,7 +40,7 @@ export function CreateThreadForm({ closeDialog }) {
   const onSubmit = (values: typeof initialValues) => {
     createThread({ ...values, channelId });
   };
-
+  console.log("saved thread : ", thread);
   useEffect(() => {
     if (thread) {
       closeDialog();
