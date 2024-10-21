@@ -11,7 +11,7 @@ export class ThreadRepository {
     createThread = async (thread: Thread): Promise<Thread> => {
         try {
             const newThread = new ThreadModel(thread);
-            const savedThreaad = await newThread.save();
+            const savedThreaad = await (await newThread.save()).populate("createdBy");
             return new Thread(savedThreaad);
         }
         catch (err: any) {
@@ -62,9 +62,6 @@ export class ThreadRepository {
                     { $project: { commentCount: { $size: '$comments' } } },
                 ]),
             ]);
-            console.log("Thread : ", thread);
-            console.log("CommentCount : ", commentCount);
-            console.log("Comments : ", thread?.comments);
             if (!thread) throw new HttpError(404, "Thread Not Found");
 
             const total = commentCount[0]?.commentCount || 0;

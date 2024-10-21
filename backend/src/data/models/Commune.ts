@@ -19,11 +19,9 @@ const communeSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        // required: true,
     },
     profileUri: {
         type: String,
-        // required: true,
     },
     members: {
         type: [mongoose.Schema.Types.ObjectId],

@@ -81,9 +81,10 @@ export class CommuneController {
     getCommuneChannel = async (req: Request, res: Response) => {
         try {
             const { communeId, channelId } = req.params;
+            const { limit, pageNumber } = req.query;
             if (!communeId || !channelId) res.status(400).json({ message: "Invalid Request" })
-            const channel = await this.communeUsecase.getChannelInfo(communeId, channelId);
-            return res.status(200).json({ channel: channel });
+            const { channel, hasMore, total } = await this.communeUsecase.getChannelInfo(communeId, channelId, Number(pageNumber), Number(limit));
+            return res.status(200).json({ channel: channel, hasMore, total });
         } catch (err: any) {
             return res.status(500).json({
                 message: "Something went wrong at server : " + err.message

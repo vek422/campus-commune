@@ -71,15 +71,34 @@ export class CommuneRepository {
         }
     }
 
-    getCommuneChannel = async (communeId: string, channelId: string) => {
+    getCommuneChannel = async (communeId: string, channelId: string, pageNumber: number, limit: number) => {
+
         try {
-            const channel = await ChannelModel.findById(channelId).populate({
+            console.log(pageNumber, limit)
+            const skip = (pageNumber - 1) * limit;
+            const [channel, threadCount] = await Promise.all([ChannelModel.findById(channelId).populate({
                 path: 'threads',
                 populate: {
-                    path: 'createdBy'
+                    path: 'createdBy',
+                },
+                options: {
+                    limit: limit,
+                    skip: skip,
+                    sort: { createdAt: -1 }
                 }
-            });
-            return channel;
+            }),
+            ChannelModel.aggregate([
+                { $match: { _id: new mongoose.Types.ObjectId(channelId) } },
+                { $project: { threadCount: { $size: '$threads' } } }
+            ])
+            ])
+            const currentCount = channel?.threads?.length || 0;
+            console.log("currCount : ", currentCount)
+            const total = threadCount[0]?.threadCount || 0;
+            console.log("total : ", total)
+            console.log("skip : ", skip)
+            const hasMore = skip + currentCount < total;
+            return { channel, total, hasMore };
         } catch (err: any) {
             throw new Error("Something went wrong : " + err.message);
         }

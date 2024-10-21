@@ -31,7 +31,8 @@ export class CommuneUsecase {
     addChannel = async (communeId: string, channelName: string) => {
         return await this.communeRepository.addChannel(communeId, channelName);
     }
-    getChannelInfo = async (communeId: string, channelId: string) => {
-        return await this.communeRepository.getCommuneChannel(communeId, channelId);
+    getChannelInfo = async (communeId: string, channelId: string, pageNumber: number, limit: number) => {
+        const { channel, total, hasMore } = await this.communeRepository.getCommuneChannel(communeId, channelId, pageNumber, limit);
+        return { channel, total, hasMore };
     }
 }

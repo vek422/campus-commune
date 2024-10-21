@@ -1,12 +1,18 @@
 import mongoose from "mongoose";
-
+import http from "http"
+import { initializeSocket } from "@infrastructure/socket";
 import app from "./app";
 import { MONGO_URI, PORT } from "./config";
-console.log(`MONGO_URI : ${MONGO_URI}`);
+import cors from "cors"
+
+const server = http.createServer(app);
+initializeSocket(server);
+
+app.use(cors())
 mongoose
   .connect(MONGO_URI)
   .then(() => {
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server is running on PORT : ${PORT}`);
     });
   })
