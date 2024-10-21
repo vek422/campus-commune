@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useCreateThread } from "@/hooks/api/useCreateThread";
-import { useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { LoadingButton } from "@/components/ui/loadingButton";
 
 const initialValues = {
@@ -34,15 +34,18 @@ const schema = z.object({
   videos: z.any().optional(),
 });
 
-export function CreateThreadForm({ closeDialog }) {
+export function CreateThreadForm({ closeDialog, socket, setThreads }) {
   const { error, thread, createThread, isLoading } = useCreateThread();
   const { channelId } = useParams();
+  const [commune] = useOutletContext();
   const onSubmit = (values: typeof initialValues) => {
     createThread({ ...values, channelId });
   };
-  console.log("saved thread : ", thread);
   useEffect(() => {
     if (thread) {
+      socket.emit("new-thread", commune._id, thread);
+      console.log(thread);
+      setThreads((prev) => [thread, ...prev]);
       closeDialog();
     }
   }, [thread]);
